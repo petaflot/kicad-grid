@@ -3,8 +3,8 @@
     script to generate a Charlieplex input matrix of arbitrary size
 
     based on
-        - "Kicad schematics and PCB python scripting"
-        - ZMK PR #1694 on https://github.com/zmkfirmware/pull/1694
+        - "Kicad schematics and PCB python scripting" https://www.youtube.com/watch?v=EP1GtsZ2VfM
+        - ZMK PR #1694 "Add charliplex keyscan" https://github.com/zmkfirmware/zmk/pull/1694
 
     Author: JCZD @ engrenage.ch
     Date:   Thu Dec 19 18:03:52 CET 2024
@@ -15,7 +15,7 @@
     - better argument parsing
 """
 # how many GPIO lines for the matrix (excluding optional interrupt line)
-gridsize = 4,4
+gridsize = 9, 9
 # size of a single cell (on the schematic sheet)
 griddim = 11, 7
 
@@ -127,12 +127,6 @@ for i in range(gridsize[0]):
                 junc = sch.junction.new()
                 junc.move(*w.end.value)
 
-# deleting source symbols
-if delete_ref_symbols:
-    refswitch.delete()
-    refdiode.delete()
-    if add_caps: refcap.delete()
-
 
 if add_interrupt_line:
     refzd = sch.symbol.DZD_
@@ -150,13 +144,22 @@ if add_interrupt_line:
                 l = sch.global_label.new()
                 l.value = "LINTR"
                 l.move(zenners[i][j].pin[2].location.value, 180)
-            
-    # deleting source symbols
-    if delete_ref_symbols:
-        refzd.delete()
-            
+
+
+# deleting source symbols
+if delete_ref_symbols:
+    refswitch.delete()
+    refdiode.delete()
+    refcap.delete()
+    refzd.delete()
+
 
 sch.write(argv[1])
+
+
+
+
+
 
 if add_ws2812:
     griddim = 11, 9
