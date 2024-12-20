@@ -166,13 +166,13 @@ if add_ws2812:
         sym.delete()
 
     # wiring daisy-chain
-
+    del(l)
     for i in range(gridsize[0]):
         for j in range(gridsize[1]):
             if i != j:
                 try:
                     l.clone()
-                except IndexError:
+                except NameError:
                     l = sch.label.new()
                     l.value = "WS2812_in"
                 finally:
